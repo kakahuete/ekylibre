@@ -217,8 +217,12 @@ class Inspection < Ekylibre::Record::Base
     points_of_category(category).map(&:net_mass_percentage).sum
   end
 
-  def items_count(scale)
-    calibrations.of_scale(scale).sum(:items_count)
+  def items_count(scale = nil)
+    if scale.nil?
+      (scales.map { |s| net_mass(s) }.sum / scales.count).round(0)
+    else
+      calibrations.of_scale(scale).sum(:items_count).in(Nomen::Unit.find(:unity))
+    end
   end
 
   def net_mass(scale = nil)
@@ -226,6 +230,14 @@ class Inspection < Ekylibre::Record::Base
       (scales.map { |s| net_mass(s) }.sum / scales.count).round(0)
     else
       calibrations.of_scale(scale).sum(:net_mass_value).in(activity.grading_net_mass_unit)
+    end
+  end
+
+  def total_items_count(scale = nil)
+    if scale.nil?
+      (scales.map { |s| total_items_count(s) }.sum / scales.count).round(0)
+    else
+      calibrations.of_scale(scale).map(&:total_items_count).sum
     end
   end
 
@@ -245,6 +257,14 @@ class Inspection < Ekylibre::Record::Base
     end
   end
 
+  def net_items_yield(scale = nil)
+    if scale.nil?
+      (scales.map { |s| net_items_yield(s) }.sum / scales.count).round(0)
+    else
+      calibrations.of_scale(scale).map(&:net_items_yield).sum.round(0)
+    end
+  end
+
   def marketable_net_mass(scale = nil)
     if scale.nil?
       (scales.map { |s| marketable_net_mass(s) }.sum / scales.count).round(0)
@@ -253,11 +273,27 @@ class Inspection < Ekylibre::Record::Base
     end
   end
 
-  def marketable_yield(scale = nil)
+  def marketable_items_count(scale = nil)
     if scale.nil?
-      (scales.map { |s| marketable_yield(s) }.sum / scales.count).round(0)
+      (scales.map { |s| marketable_items_count(s) }.sum / scales.count).round(0)
     else
-      calibrations.of_scale(scale).marketable.map(&:marketable_yield).sum.round(0)
+      calibrations.of_scale(scale).marketable.map(&:marketable_items_count).sum.round(0)
+    end
+  end
+
+  def marketable_mass_yield(scale = nil)
+    if scale.nil?
+      (scales.map { |s| marketable_mass_yield(s) }.sum / scales.count).round(0)
+    else
+      calibrations.of_scale(scale).marketable.map(&:marketable_mass_yield).sum.round(0)
+    end
+  end
+
+    def marketable_items_yield(scale = nil)
+    if scale.nil?
+      (scales.map { |s| marketable_items_yield(s) }.sum / scales.count).round(0)
+    else
+      calibrations.of_scale(scale).marketable.map(&:marketable_items_yield).sum.round(0)
     end
   end
 
