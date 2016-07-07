@@ -4,8 +4,6 @@ psql -U postgres -d ekylibre_test -c 'CREATE SCHEMA IF NOT EXISTS postgis;'
 psql -U postgres -d ekylibre_test -c 'CREATE EXTENSION IF NOT EXISTS postgis SCHEMA postgis;'
 psql -U postgres -d ekylibre_test -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp" SCHEMA postgis;'
 
-sh -e /etc/init.d/xvfb start
-
 cp -f test/ci/database.yml config/database.yml
 
 bundle exec rake db:migrate RAILS_ENV=test
