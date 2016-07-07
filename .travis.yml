@@ -10,7 +10,7 @@ env:
   - TEST_LOCALE=eng
 before_install: test/ci/before_install
 before_script:  test/ci/before_script
-script: xvfb-run bundle exec rake test:run_all DRIVER=webkit LOCALE=$TEST_LOCALE
+script: xvfb-run bundle exec rake test:run_all DRIVER=capybara_webkit LOCALE=$TEST_LOCALE
 # script: bundle exec rake test:core
 services:
   - redis-server
